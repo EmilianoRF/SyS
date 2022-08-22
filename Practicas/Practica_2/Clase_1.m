@@ -17,9 +17,10 @@ y_sen_max   = max(y_sen);
 y_sen_min   = min(y_sen);
 
 y_sen_amp     = max(abs(y_sen));
-y_sen_energ   = norm(y_sen)*norm(y_sen);
+%y_sen_energ   = norm(y_sen)*norm(y_sen);
+y_sen_energ   = power(norm(y_sen),2);
 y_sen_acc     = sum(abs(y_sen));
-y_sen_pot     = (1/length(y_sen)) * sum(abs(y_sen));
+y_sen_pot     = (1/(2*length(y_sen)) )* sum(power(abs(y_sen),2));
 y_sen_rms     = sqrt(y_sen_pot);
 
 disp(['Seno:'])
@@ -37,9 +38,10 @@ y_square_max   = max(y_square);
 y_square_min   = min(y_square);
 
 y_square_amp     = max(abs(y_square));
-y_square_energ   = norm(y_square)*norm(y_square);
+%y_square_energ   = norm(y_square)*norm(y_square);
+y_square_energ = power(norm(y_square),2);
 y_square_acc     = sum(abs(y_square));
-y_square_pot     = (1/length(y_square)) * sum(abs(y_square));
+y_square_pot     = (1/length(y_square)) * sum(power(abs(y_square),2));
 y_square_rms     = sqrt(y_square_pot);
 
 disp(['Cuadrada:'])
@@ -57,9 +59,10 @@ y_aleatoria_max   = max(y_aleatoria);
 y_aleatoria_min   = min(y_aleatoria);
 
 y_aleatoria_amp     = max(abs(y_aleatoria));
-y_aleatoria_energ   = norm(y_aleatoria)*norm(y_aleatoria);
+%y_aleatoria_energ   = norm(y_aleatoria)*norm(y_aleatoria);
+y_aleatoria_energ   = power(norm(y_aleatoria),2);
 y_aleatoria_acc     = sum(abs(y_aleatoria));
-y_aleatoria_pot     = (1/length(y_aleatoria)) * sum(abs(y_aleatoria));
+y_aleatoria_pot     = (1/length(y_aleatoria)) * sum(power(abs(y_aleatoria),2));
 y_aleatoria_rms     = sqrt(y_aleatoria_pot);
 
 disp(['Aleatoria:'])
@@ -73,13 +76,12 @@ disp(['  - Potencia:' num2str(y_aleatoria_pot)])
 disp(['  - RMS:' num2str(y_aleatoria_rms)])
 
 %%%-------------------------------------------------------------------- %%%
-
-%%%-------------------------------------------------------------------- %%%
-
 figure;
 
 subplot(3,1,1);
 plot(t,y_sen);
+grid on;
+grid minor;
 title('sin(t)','Interpreter','latex');
 xlabel('t[s]','Interpreter','latex');
 ylabel('Amplitud','Interpreter','latex');
@@ -87,6 +89,8 @@ ylim([-1 3 ]);
 
 subplot(3,1,2);
 plot(t,y_square);
+grid on;
+grid minor;
 title('Cuadrada','Interpreter','latex');
 xlabel('t[s]','Interpreter','latex');
 ylabel('Amplitud','Interpreter','latex');
@@ -94,28 +98,30 @@ ylim([-2 2 ]);
 
 subplot(3,1,3);
 plot(t,y_aleatoria);
+grid on;
+grid minor;
 title('Aleatoria','Interpreter','latex');
 xlabel('t[s]','Interpreter','latex');
 ylabel('Amplitud','Interpreter','latex');
 ylim([-2 2 ]);
-
 
 %% Ejercicio 2
 
 clear all % borra las variables
 close all % cierra las ventanas
 clc % limpia la consola
+f_1 = 3; % Frecuencia
+f_2 = 3; % Frecuencia
+A_1 = 3;
+A_2 = 1;
+Phi_1 = pi;
+Phi_2 = pi/4
+;
 
 T = 0.001; % Per?odo de muestreo
 t = 0:T:3-T;
 alpha = 0.78;
-f_1 = 12; % Frecuencia
-A_1 = 3;
-Phi_1 = 0.5*pi;
 
-f_2 = 3.5; % Frecuencia
-A_2 = 8;
-Phi_2 = 0.75*pi;
 
 x_sen1 = A_1*sin(2*pi*t*f_1+Phi_1);
 x_sen2 = A_2*sin(2*pi*t*f_2+Phi_2);
@@ -159,54 +165,3 @@ plot(t,x_sen1+zeros(1,length(x_sen1)),'m');
 title('$x_1(t) + 0$','Interpreter','latex');
 xlabel('t[s]','Interpreter','latex');
 ylabel('Amplitud','Interpreter','latex');
-
-%% Ejercicio 3
-
-clear all % borra las variables
-close all % cierra las ventanas
-clc % limpia la consola
-
-T = 0.001; % Per?odo de muestreo
-t = 0:T:3-T;
-
-
-%% Ejercicio 6
-clear all % borra las variables
-close all % cierra las ventanas
-clc % limpia la consola
-
-T = 0.001; 
-t = 0:T:2-T;
-freqs = 1:1:10;
-x     = zeros(1,length(t));
-for i=1:length(freqs)
-    x = x + sin(2*pi*freqs(i)*t);
-end
-
-for i=1:length(freqs)
-    dot_X(i) = dot(x,sin(2*pi*freqs(i)*t));
-end
-
-figure
-subplot(2,2,1);
-plot(t,x);
-title('$x(t)$','Interpreter','latex');
-ylabel('Amplitud','Interpreter','latex');
-subplot(2,2,2);
-bar(freqs,dot_X);
-ylabel('Amplitud','Interpreter','latex');
-for i=1:length(freqs)
-    x = x + sin(2*pi*freqs(i)*t+rand*pi);
-end
-
-for i=1:length(freqs)
-    dot_X(i) = dot(x,sin(2*pi*freqs(i)*t));
-end
-
-subplot(2,2,3);
-plot(t,x);
-title('$x(t)$','Interpreter','latex');
-ylabel('Amplitud','Interpreter','latex');
-subplot(2,2,4);
-bar(freqs,dot_X);
-title('Frecuencia y fase variable','Interpreter','latex');
